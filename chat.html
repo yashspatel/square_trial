@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Square Agent Chat</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js + DataLabels plugin (for labels inside pie/doughnut) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</head>
+
+<body class="bg-white">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <div class="border-b bg-white">
+            <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+                <div class="font-semibold text-slate-900">Square Sandbox Agent</div>
+                <button id="clearBtn" class="text-xs px-3 py-2 rounded-lg border hover:bg-slate-50" title="Clear chat">
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat container -->
+        <div class="flex-1">
+            <div id="chat" class="max-w-5xl mx-auto px-4 py-6 space-y-4"></div>
+
+            <!-- Approve / Reject -->
+            <div class="max-w-5xl mx-auto px-4 pb-3">
+                <div id="actions" class="hidden gap-2">
+                    <button id="approveBtn"
+                        class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm hover:bg-emerald-700">
+                        ✅ Approve
+                    </button>
+                    <button id="rejectBtn"
+                        class="px-4 py-2 rounded-xl bg-slate-200 text-slate-900 text-sm hover:bg-slate-300">
+                        ❌ Reject
+                    </button>
+                    <div class="text-xs text-slate-500 self-center ml-2">
+                        Applies to the most recent requested change
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="border-t bg-white">
+            <div class="max-w-5xl mx-auto px-4 py-4 flex gap-2">
+                <textarea id="input"
+                    class="flex-1 border rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-slate-200 resize-none"
+                    rows="1" placeholder="Ask about your Square sandbox… (charts, team, catalog, orders)"></textarea>
+                <button id="sendBtn" class="px-5 py-3 rounded-2xl bg-slate-900 text-white text-sm hover:bg-slate-800">
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/web/chat.js"></script>
+</body>
+
+</html>

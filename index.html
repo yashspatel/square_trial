@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Square Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+    <div class="max-w-6xl mx-auto p-6">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-semibold">Square Sandbox Dashboard</h1>
+                <p class="text-slate-600">Locations • Catalog • Team • Orders</p>
+            </div>
+            <button id="refresh" class="rounded-xl bg-slate-900 text-white px-4 py-2 hover:bg-slate-800">
+                Refresh
+            </button>
+        </div>
+
+        <div id="status" class="mb-4 rounded-xl border bg-white p-3 text-sm text-slate-600">
+            Loading…
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white rounded-2xl border shadow-sm p-4">
+                <div class="text-slate-500 text-sm">Primary Location</div>
+                <div id="locName" class="font-semibold text-lg mt-1">—</div>
+                <div id="locId" class="textfont-mono text-xs text-slate-500 mt-1">—</div>
+            </div>
+            <div class="bg-white rounded-2xl border shadow-sm p-4">
+                <div class="text-slate-500 text-sm">Catalog Items</div>
+                <div id="catalogCount" class="font-semibold text-lg mt-1">—</div>
+            </div>
+            <div class="bg-white rounded-2xl border shadow-sm p-4">
+                <div class="text-slate-500 text-sm">Team Members</div>
+                <div id="teamCount" class="font-semibold text-lg mt-1">—</div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <section class="bg-white rounded-2xl border shadow-sm">
+                <div class="p-4 border-b">
+                    <h2 class="font-semibold">Catalog</h2>
+                    <p class="text-slate-500 text-sm">Prices are in dollars (cents / 100)</p>
+                </div>
+                <div class="p-4 overflow-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-left text-slate-500">
+                            <tr>
+                                <th class="py-2 pr-4">Name</th>
+                                <th class="py-2 pr-4">Price</th>
+                                <th class="py-2 pr-4">Item ID</th>
+                                <th class="py-2 pr-4">Variation ID</th>
+                            </tr>
+                        </thead>
+                        <tbody id="catalogBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-2xl border shadow-sm">
+                <div class="p-4 border-b">
+                    <h2 class="font-semibold">Team</h2>
+                    <p class="text-slate-500 text-sm">Wage shown in dollars/hr</p>
+                </div>
+                <div class="p-4 overflow-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-left text-slate-500">
+                            <tr>
+                                <th class="py-2 pr-4">Name</th>
+                                <th class="py-2 pr-4">Status</th>
+                                <th class="py-2 pr-4">Wage</th>
+                                <th class="py-2 pr-4">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-2xl border shadow-sm">
+                <div class="p-4 border-b">
+                    <h2 class="font-semibold">Orders</h2>
+                    <p class="text-slate-500 text-sm">Empty until you create test orders</p>
+                </div>
+                <div class="p-4 overflow-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-left text-slate-500">
+                            <tr>
+                                <th class="py-2 pr-4">Created</th>
+                                <th class="py-2 pr-4">State</th>
+                                <th class="py-2 pr-4">Total</th>
+                                <th class="py-2 pr-4">Order ID</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="/web/app.js"></script>
+</body>
+
+</html>
