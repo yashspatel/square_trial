@@ -1,65 +1,85 @@
-# square_trial
+## Project Scope — Square AI Agent (MCP + LangGraph)
 
-Product scope
+### What this project is
+- A **ChatGPT-like web dashboard** for interacting with a **Square Sandbox developer account** using **Square MCP (Model Context Protocol)** tools.
+- Built with **FastAPI** (backend), **LangGraph/LangChain agent** (reasoning + tool calling), and a **web chat UI** (HTML/JS).
+- Designed for **natural-language questions and actions** over Square data.
 
-ChatGPT-like web chat UI for Square Sandbox operations (read + write).
+---
 
-Supports natural language questions + actions on:
+### Key capabilities
+- **Read (Q&A / Insights)**
+  - Ask questions like: “How many items are in my menu?”, “Who is the cook?”, “Show wages per hour.”
+  - Pulls data using MCP tools (example services):
+    - `locations`
+    - `catalog` (menu items + variations/prices)
+    - `team` (members, jobs, wage settings)
+    - `orders` (when available)
 
-Locations
+- **Write (Create/Update/Delete) with safety**
+  - User can request actions like:
+    - Add/remove/edit catalog items
+    - Add/edit team members and roles/jobs
+    - Update wage settings (if supported by tools)
+  - **All writes require UI approval** via **Approve / Reject** buttons.
 
-Catalog (menu items + prices)
+- **Charts / Visualizations**
+  - User can ask for any chart (bar, pie, line, etc.) or the assistant chooses the best chart for the data.
+  - UI renders charts automatically when the assistant returns a Chart.js config wrapped in:
+    ```text
+    <CHART_CONFIG>
+    {...valid JSON...}
+    </CHART_CONFIG>
+    ```
+  - Supports labels inside pie/doughnut using `chartjs-plugin-datalabels`.
 
-Team members (roles/jobs + wages)
+---
 
-Orders (when available)
+### Non-negotiable rules (project constraints)
+- **No hard-coded workflows** for specific requests:
+  - The agent decides which tools to call and can loop tool calls until it has enough information.
+- **LLM intent routing (not keyword routing)**:
+  - Each user message is classified as: `read` / `write` / `clear` / `unknown`.
+  - `write` ⇒ requires approval; `read` ⇒ responds immediately.
+- **No extra “CONFIRM” messages**:
+  - Once the user clicks **Approve**, the write must execute without asking for additional confirmation.
+- **Data correctness**
+  - Money fields from Square are in cents (`amount=3600` ⇒ `$36.00`) and must be displayed as `amount/100`.
+  - Wage must come from Square wage settings (`hourly_rate`) and **must not be guessed** (no weekly/monthly salary hallucinations).
+- **Charts must render**
+  - The assistant must not say “I can’t display charts.”
+  - For chart requests (or best-fit visualization), it must output `<CHART_CONFIG>` so the UI can render it.
 
-Core behaviors
+---
 
-LLM intent routing: classify each message as read / write / clear / unknown.
+### UX requirements
+- Chat interface similar to ChatGPT:
+  - Message bubbles, enter-to-send, clear chat
+  - Friendly “processing” messages instead of just “...”
+- Approve / Reject controls appear only when a write action is pending.
+- After writes, the assistant fetches updated data and summarizes what changed.
 
-Write requests require explicit Approve/Reject UI gating.
+---
 
-Approved writes execute automatically (no extra “CONFIRM”).
+### Backend endpoints (high level)
+- `GET /chat` — chat UI page
+- `POST /api/chat` — main chat endpoint (routes intent and runs agent)
+- `POST /api/chat/approve` — executes pending write request (writes enabled)
+- `POST /api/chat/reject` — cancels pending write request
+- `GET /api/summary` — returns a JSON summary of current Square sandbox state (locations, catalog, team, etc.)
 
-Agent can loop tool calls until it can answer.
+---
 
-Data correctness rules
+### Tech stack
+- **FastAPI** (backend API + server)
+- **LangGraph / LangChain** (agent orchestration)
+- **Square MCP Server** via stdio (sandbox)
+- **Chart.js** (+ `chartjs-plugin-datalabels`) for charts
+- **HTML + JavaScript** for the chat UI
 
-Convert all money from cents to dollars (amount/100).
+---
 
-Wage must come from Square wage_setting/hourly_rate; never infer weekly/monthly salary.
-
-If data is missing, respond “not available” and request minimal missing identifiers.
-
-Visualization scope
-
-Agent selects best chart type for the data/request (no hardcoding).
-
-For any chart request (or best visualization), agent must output Chart.js JSON inside <CHART_CONFIG>...</CHART_CONFIG>.
-
-Support datalabels for inside-slice labels on pie/doughnut.
-
-UX scope
-
-Friendly progress/status text while waiting (not “…”).
-
-Clear button to reset chat state.
-
-Approve/Reject buttons appear only when needed.
-
-Technical scope
-
-FastAPI endpoints: /api/chat, /api/chat/approve, /api/chat/reject, /api/summary.
-
-MCP client connects to Square MCP server (stdio, sandbox access token).
-
-Session-based chat history + pending action store.
-
-Non-goals / constraints
-
-No “keyword hardcoding” for deciding intent or chart type.
-
-Do not frequently rename files or restructure folders.
-
-Do not claim capabilities not backed by tools (no hallucinated salary/week, etc.).
+### Out of scope (for now)
+- Production auth/multi-tenant security (sandbox-focused)
+- Storing history in a database (currently session/in-memory oriented)
+- Payroll/scheduling integrations beyond what Square MCP exposes
